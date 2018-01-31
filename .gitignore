@@ -1,1 +1,36 @@
 # Created by .ignore support plugin (hsz.mobi)
+mvnw*
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
+
+### additional ###
+*.class
+
+# Package Files #
+*.jar
+*.war
+*.ear
+.idea/
+*/logs/*.log
+logs/
+target/
+.DS_Store
