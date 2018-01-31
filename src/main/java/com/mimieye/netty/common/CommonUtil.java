@@ -1,7 +1,10 @@
 package com.mimieye.netty.common;
 
+import com.mimieye.netty.client.NettyClientTest;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -14,6 +17,8 @@ import java.util.concurrent.Future;
 import static com.mimieye.netty.common.ThreadPool.*;
 
 public class CommonUtil {
+    private static Logger logger = LoggerFactory.getLogger(NettyClientTest.class);
+
     //public static final Object SEND = new Object();
     //public static final Object RECEIVE = new Object();
     public static volatile Boolean RUNNING = true;

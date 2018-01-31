@@ -1,5 +1,6 @@
 package com.mimieye.netty.server;
 
+import com.mimieye.netty.client.NettyClientTest;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -12,6 +13,8 @@ import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import io.netty.handler.codec.LengthFieldPrepender;
 import io.netty.handler.codec.string.StringEncoder;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.nio.charset.Charset;
 import java.util.Scanner;
@@ -22,6 +25,8 @@ import static com.mimieye.netty.common.CommonUtil.*;
  * Created by Pierreluo on 2017/5/18.
  */
 public class NettyServerTest {
+    private static Logger logger = LoggerFactory.getLogger(NettyClientTest.class);
+
     public static void main(String[] args) throws InterruptedException {
         System.out.println("启动服务端.");
         Runnable runnable = new Runnable() {

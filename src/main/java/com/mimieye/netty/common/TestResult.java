@@ -1,10 +1,15 @@
 package com.mimieye.netty.common;
 
+import com.mimieye.netty.client.NettyClientTest;
 import io.netty.channel.socket.SocketChannel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.Callable;
 
 public class TestResult implements Callable {
+    private static Logger logger = LoggerFactory.getLogger(NettyClientTest.class);
+
     private SocketChannel socketChannel;
     private String result;
 
