@@ -23,4 +23,12 @@ public class ThreadPool {
         TASK_POOL.shutdown();
         RESULT_POOL.shutdown();
     }
+
+    public static boolean getTaskStatus() {
+        return TASK_POOL.isTerminated();
+    }
+
+    public static boolean getResultStatus() {
+        return RESULT_POOL.isTerminated();
+    }
 }

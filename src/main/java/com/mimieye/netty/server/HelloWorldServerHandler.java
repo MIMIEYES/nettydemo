@@ -17,8 +17,9 @@ public class HelloWorldServerHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         String uuid = ctx.channel().id().asLongText();
-        System.out.println("客户端连接关闭.ID: " + uuid);
+        System.out.println("服务端检测到客户端连接关闭.ID: " + uuid);
         GatewayService.removeGatewayChannel(uuid);
+        System.out.println("当前容量：" + GatewayService.getChannels().size());
     }
 
     @Override

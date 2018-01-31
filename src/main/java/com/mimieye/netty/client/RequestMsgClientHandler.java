@@ -16,7 +16,7 @@ import static com.mimieye.netty.common.CommonUtil.closeClient;
 public class RequestMsgClientHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-        System.out.println("服务端连接关闭.");
+        System.out.println("客户端检测到服务端连接关闭.");
         closeClient();
     }
 

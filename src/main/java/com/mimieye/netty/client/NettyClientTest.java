@@ -57,6 +57,8 @@ public class NettyClientTest {
                     }
 
                 }
+                System.out.println("客户端停止监听发送消息.");
+
             }
         };
         Thread sendThread = new Thread(listener, "client_listen_and_send_msg");
