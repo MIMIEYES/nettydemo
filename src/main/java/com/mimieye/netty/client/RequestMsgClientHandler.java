@@ -27,7 +27,7 @@ public class RequestMsgClientHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws UnsupportedEncodingException {
         // 收到server回复的消息
-        System.out.print("receive server msg: ");
+        logger.debug("receive server msg: ");
         ByteBuf buf = (ByteBuf) msg;
         byte[] bytes = new byte[buf.readableBytes()];
         buf.readBytes(bytes);
