@@ -20,7 +20,7 @@ public class RequestMsgClientHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-        System.out.println("客户端检测到服务端连接关闭.");
+        logger.debug("客户端检测到服务端连接关闭.");
         closeClient();
     }
 
@@ -32,7 +32,7 @@ public class RequestMsgClientHandler extends ChannelInboundHandlerAdapter {
         byte[] bytes = new byte[buf.readableBytes()];
         buf.readBytes(bytes);
         String resp = new String(bytes, "UTF-8");
-        System.out.println(resp);
+        logger.debug(resp);
         buf.release();
 
         // 异步处理服务端消息

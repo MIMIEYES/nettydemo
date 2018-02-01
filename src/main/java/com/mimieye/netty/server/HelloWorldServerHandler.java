@@ -22,9 +22,9 @@ public class HelloWorldServerHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         String uuid = ctx.channel().id().asLongText();
-        System.out.println("服务端检测到客户端连接关闭.ID: " + uuid);
+        logger.debug("服务端检测到客户端连接关闭.ID: " + uuid);
         GatewayService.removeGatewayChannel(uuid);
-        System.out.println("当前容量：" + GatewayService.getChannels().size());
+        logger.debug("当前容量：" + GatewayService.getChannels().size());
     }
 
     @Override
@@ -34,7 +34,7 @@ public class HelloWorldServerHandler extends ChannelInboundHandlerAdapter {
         byte[] bytes = new byte[buf.readableBytes()];
         buf.readBytes(bytes);
         String strMsg = new String(bytes, "UTF-8");
-        System.out.println(strMsg);
+        logger.debug(strMsg);
         buf.release();
 
         // 异步处理客户端消息
@@ -49,7 +49,7 @@ public class HelloWorldServerHandler extends ChannelInboundHandlerAdapter {
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         String uuid = ctx.channel().id().asLongText();
         GatewayService.addGatewayChannel(uuid, (SocketChannel)ctx.channel());
-        System.out.println("a new connect come in: " + uuid);
+        logger.debug("a new connect come in: " + uuid);
     }
 
 }

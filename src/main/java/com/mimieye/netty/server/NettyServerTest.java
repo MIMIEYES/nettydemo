@@ -28,7 +28,7 @@ public class NettyServerTest {
     private static Logger logger = LoggerFactory.getLogger(NettyClientTest.class);
 
     public static void main(String[] args) throws InterruptedException {
-        System.out.println("启动服务端.");
+        logger.debug("启动服务端.");
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
@@ -39,18 +39,18 @@ public class NettyServerTest {
         Thread thread = new Thread(runnable, "server-pierre");
         thread.start();
 
-        System.out.println("监听消息发送队列并发送消息.");
+        logger.debug("监听消息发送队列并发送消息.");
         Runnable listener = new Runnable() {
             @Override
             public void run() {
                 while (RUNNING) {
                     String taskStr = null;
                     String name = Thread.currentThread().getName();
-                    System.out.println(name + "-线程[消息发送队列]准备读取消息.");
+                    logger.debug(name + "-线程[消息发送队列]准备读取消息.");
                     synchronized (SEND_QUEUE) {
                         while(RUNNING && SEND_QUEUE.isEmpty()) {
                             try {
-                                System.out.println( name + "-线程[消息发送队列]等待消息.");
+                                logger.debug( name + "-线程[消息发送队列]等待消息.");
                                 SEND_QUEUE.wait();
                             } catch (Exception e) {
                                 Thread.currentThread().interrupt();
@@ -60,18 +60,18 @@ public class NettyServerTest {
                         taskStr = SEND_QUEUE.poll();
                     }
                     if(StringUtils.isNotBlank(taskStr)) {
-                        System.out.println(name + "-线程[消息发送队列]发送数据.");
+                        logger.debug(name + "-线程[消息发送队列]发送数据.");
                         sendServerMsg(taskStr);
                     }
 
                 }
-                System.out.println("服务端停止监听发送消息.");
+                logger.debug("服务端停止监听发送消息.");
             }
         };
         Thread sendThread = new Thread(listener, "server_listen_and_send_msg");
         sendThread.start();
 
-        System.out.println("生产消息.");
+        logger.debug("生产消息.");
         Scanner scanner = new Scanner(System.in);
         String input = null;
         while (scanner.hasNextLine()) {
@@ -79,7 +79,7 @@ public class NettyServerTest {
             if(!"exit".equals(input)) {
                 addMsg(input);
             } else {
-                System.out.println("准备关闭服务端.");
+                logger.debug("准备关闭服务端.");
                 closeServer();
                 break;
             }

@@ -69,8 +69,8 @@ public class CommonUtil {
         // 关闭任务池和结果池
         ThreadPool.closePool();
 
-        System.out.println("TASK_POOL - " + getTaskStatus());
-        System.out.println("RESULT_POOL - " + getResultStatus());
+        logger.debug("TASK_POOL - " + getTaskStatus());
+        logger.debug("RESULT_POOL - " + getResultStatus());
 
     }
 
@@ -111,10 +111,10 @@ public class CommonUtil {
         ThreadPool.closePool();
 
 
-        System.out.println("TASK_POOL - " + getTaskStatus());
-        System.out.println("RESULT_POOL - " + getResultStatus());
-        System.out.println("boss - " + boss.isTerminated());
-        System.out.println("worker - " + worker.isTerminated());
+        logger.debug("TASK_POOL - " + getTaskStatus());
+        logger.debug("RESULT_POOL - " + getResultStatus());
+        logger.debug("boss - " + boss.isTerminated());
+        logger.debug("worker - " + worker.isTerminated());
 
         //ObjectCleaner.
     }

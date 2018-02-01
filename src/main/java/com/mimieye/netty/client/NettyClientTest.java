@@ -22,7 +22,7 @@ public class NettyClientTest {
     private static Logger logger = LoggerFactory.getLogger(NettyClientTest.class);
 
     public static void main(String[] args) throws InterruptedException {
-        System.out.println("启动客户端.");
+        logger.debug("启动客户端.");
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
@@ -34,18 +34,18 @@ public class NettyClientTest {
         thread.start();
         waitStartUp.await();
 
-        System.out.println("监听消息发送队列并发送消息.");
+        logger.debug("监听消息发送队列并发送消息.");
         Runnable listener = new Runnable() {
             @Override
             public void run() {
                 while (RUNNING) {
                     String taskStr = null;
                     String name = Thread.currentThread().getName();
-                    System.out.println(name + "-线程[消息发送队列]准备读取消息.");
+                    logger.debug(name + "-线程[消息发送队列]准备读取消息.");
                     synchronized (SEND_QUEUE) {
                         while(RUNNING && SEND_QUEUE.isEmpty()) {
                             try {
-                                System.out.println( name + "-线程[消息发送队列]等待消息.");
+                                logger.debug( name + "-线程[消息发送队列]等待消息.");
                                 SEND_QUEUE.wait();
                             } catch (Exception e) {
                                 Thread.currentThread().interrupt();
@@ -55,19 +55,19 @@ public class NettyClientTest {
                         taskStr = SEND_QUEUE.poll();
                     }
                     if(StringUtils.isNotBlank(taskStr)) {
-                        System.out.println(name + "-线程[消息发送队列]发送数据.");
+                        logger.debug(name + "-线程[消息发送队列]发送数据.");
                         socketChannel.writeAndFlush(taskStr);
                     }
 
                 }
-                System.out.println("客户端停止监听发送消息.");
+                logger.debug("客户端停止监听发送消息.");
 
             }
         };
         Thread sendThread = new Thread(listener, "client_listen_and_send_msg");
         sendThread.start();
 
-        System.out.println("生产消息.");
+        logger.debug("生产消息.");
         Scanner scanner = new Scanner(System.in);
         String input = null;
         while (scanner.hasNextLine()) {
@@ -75,7 +75,7 @@ public class NettyClientTest {
             if(!"exit".equals(input)) {
                 addMsg(input);
             } else {
-                System.out.println("准备关闭客户端.");
+                logger.debug("准备关闭客户端.");
                 closeClient();
                 break;
             }
@@ -101,13 +101,13 @@ public class NettyClientTest {
 
             if(f.isSuccess()) {
                 socketChannel = (SocketChannel) f.channel();
-                System.out.println("clientId: " + socketChannel.id().asLongText() + " - 连接成功.");
+                logger.debug("clientId: " + socketChannel.id().asLongText() + " - 连接成功.");
                 waitStartUp.countDown();
             }
 
             // Wait until the connection is closed.
             f.channel().closeFuture().sync();
-            System.out.println("***************** client close. ***************** ");
+            logger.debug("***************** client close. ***************** ");
         } catch (Exception e){
             e.printStackTrace();
         } finally {

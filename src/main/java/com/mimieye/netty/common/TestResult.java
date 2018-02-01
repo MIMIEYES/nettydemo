@@ -21,14 +21,14 @@ public class TestResult implements Callable {
     @Override
     public Object call() throws Exception {
         String name = Thread.currentThread().getName();
-        System.out.println(name + "-线程[结果队列]返回处理结果.");
+        logger.debug(name + "-线程[结果队列]返回处理结果.");
         if(socketChannel == null) {
-            System.out.println("异常, 无socketChannel.");
+            logger.debug("异常, 无socketChannel.");
             return null;
         }
         String channelId = socketChannel.id().asLongText();
         String resp = "channelId: " + channelId + ", msg: " + result;
-        System.out.println(name + "-线程[结果队列]返回的处理结果是: " + resp);
+        logger.debug(name + "-线程[结果队列]返回的处理结果是: " + resp);
         //ByteBuf byteBuf = socketChannel.alloc().buffer(resp.getBytes("UTF-8").length);
         //byteBuf.writeBytes(resp.getBytes("UTF-8"));
         //socketChannel.writeAndFlush(byteBuf);
