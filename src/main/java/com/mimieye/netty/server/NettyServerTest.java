@@ -1,24 +1,16 @@
 package com.mimieye.netty.server;
 
+import com.mimieye.netty.common.MyChannelInitializer;
 import com.mimieye.netty.client.NettyClientTest;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
-import io.netty.channel.ChannelPipeline;
-import io.netty.channel.epoll.EpollEventLoopGroup;
-import io.netty.channel.epoll.EpollServerSocketChannel;
 import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
-import io.netty.handler.codec.LengthFieldPrepender;
-import io.netty.handler.codec.string.StringEncoder;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.nio.charset.Charset;
 import java.util.Scanner;
 
 import static com.mimieye.netty.common.CommonUtil.*;
@@ -106,17 +98,7 @@ public class NettyServerTest {
                     .option(ChannelOption.SO_BACKLOG, 100)
                     // 保持长连接
                     .childOption(ChannelOption.SO_KEEPALIVE, true)
-                    .childHandler(new ChannelInitializer<SocketChannel>() {
-                        @Override
-                        public void initChannel(SocketChannel ch) throws Exception {
-                            ChannelPipeline p = ch.pipeline();
-                            //p.addLast(new LoggingHandler(LogLevel.DEBUG));
-                            p.addLast("encoder0",new LengthFieldPrepender(8, false));
-                            p.addLast("encoder1",new StringEncoder(Charset.forName("UTF-8")));
-                            p.addLast("decoder",new LengthFieldBasedFrameDecoder(1024 * 1024, 0, 8, 0, 8));
-                            p.addLast( new HelloWorldServerHandler());
-                        }
-                    });
+                    .childHandler(new MyChannelInitializer<>(new HelloWorldServerHandler()));
             // Start the server.
             ChannelFuture f = boot.bind(11111).sync();
 

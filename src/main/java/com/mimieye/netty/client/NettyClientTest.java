@@ -1,5 +1,6 @@
 package com.mimieye.netty.client;
 
+import com.mimieye.netty.common.MyChannelInitializer;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -60,7 +61,7 @@ public class NettyClientTest {
                     if(StringUtils.isNotBlank(taskStr)) {
                         logger.debug(name + "-线程[消息发送队列]发送数据.");
                         socketChannel.writeAndFlush(taskStr);
-                        //ByteBuf buf = Unpooled.copiedBuffer("asd", CharsetUtil.UTF_8);
+                        ByteBuf buf = Unpooled.copiedBuffer("asd", CharsetUtil.UTF_8);
                     }
 
                 }

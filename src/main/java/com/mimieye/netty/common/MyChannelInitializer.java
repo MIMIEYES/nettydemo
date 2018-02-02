@@ -1,4 +1,4 @@
-package com.mimieye.netty.client;
+package com.mimieye.netty.common;
 
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.ChannelInitializer;
