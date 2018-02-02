@@ -48,9 +48,11 @@ public class RequestMsgClientHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-        // Close the connection when an exception is raised.
-        cause.printStackTrace();
-        ctx.close();
+        String uuid = ctx.channel().id().asLongText();
+        String ip = ctx.channel().remoteAddress().toString();
+        logger.error("服务端-" + ip + " | " + uuid + "异常.", cause);
+        //TODO 是否关闭连接
+
     }
 }
 

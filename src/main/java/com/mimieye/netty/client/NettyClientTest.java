@@ -1,12 +1,15 @@
 package com.mimieye.netty.client;
 
 import io.netty.bootstrap.Bootstrap;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.util.CharsetUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,6 +60,7 @@ public class NettyClientTest {
                     if(StringUtils.isNotBlank(taskStr)) {
                         logger.debug(name + "-线程[消息发送队列]发送数据.");
                         socketChannel.writeAndFlush(taskStr);
+                        //ByteBuf buf = Unpooled.copiedBuffer("asd", CharsetUtil.UTF_8);
                     }
 
                 }

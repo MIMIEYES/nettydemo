@@ -46,6 +46,19 @@ public class HelloWorldServerHandler extends ChannelInboundHandlerAdapter {
     }
 
     @Override
+    public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
+        ctx.flush();
+    }
+
+    @Override
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+        String uuid = ctx.channel().id().asLongText();
+        String ip = ctx.channel().remoteAddress().toString();
+        logger.error("客户端-" + ip + " | " + uuid + "异常.", cause);
+        //TODO 是否关闭连接
+    }
+
+    @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         String uuid = ctx.channel().id().asLongText();
         GatewayService.addGatewayChannel(uuid, (SocketChannel)ctx.channel());
