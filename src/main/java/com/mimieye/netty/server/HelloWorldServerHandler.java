@@ -11,6 +11,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.UnsupportedEncodingException;
+import java.net.InetSocketAddress;
+import java.net.SocketAddress;
 
 /**
  * Created by Pierreluo on 2017/12/6.
@@ -62,7 +64,9 @@ public class HelloWorldServerHandler extends ChannelInboundHandlerAdapter {
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         String uuid = ctx.channel().id().asLongText();
         GatewayService.addGatewayChannel(uuid, (SocketChannel)ctx.channel());
-        logger.debug("a new connect come in: " + uuid);
+        InetSocketAddress socketAddress = (InetSocketAddress) ctx.channel().remoteAddress();
+        logger.debug("a new connect come in: " + uuid + ", ip: " + socketAddress.getAddress().toString() + ", port: " + socketAddress.getPort());
+        //socketAddress.
     }
 
 }
