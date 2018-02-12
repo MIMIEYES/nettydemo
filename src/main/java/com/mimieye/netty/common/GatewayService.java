@@ -8,6 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class GatewayService {
 
     private static volatile Map<String, SocketChannel> map = new ConcurrentHashMap<>();
+    public static volatile Map<String, SocketChannel> clientMap = new ConcurrentHashMap<>();
 
     public static void addGatewayChannel(String id, SocketChannel gateway_channel){
         map.put(id, gateway_channel);

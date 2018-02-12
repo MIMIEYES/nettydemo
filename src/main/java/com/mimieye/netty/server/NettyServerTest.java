@@ -2,15 +2,20 @@ package com.mimieye.netty.server;
 
 import com.mimieye.netty.common.MyChannelInitializer;
 import com.mimieye.netty.client.NettyClientTest;
+import com.mimieye.netty.common.MyServerChannelInitializer;
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelOption;
+import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
+import io.netty.handler.codec.LengthFieldPrepender;
+import io.netty.handler.codec.string.StringEncoder;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.nio.charset.Charset;
 import java.util.Scanner;
 
 import static com.mimieye.netty.common.CommonUtil.*;
@@ -95,13 +100,37 @@ public class NettyServerTest {
             worker = new NioEventLoopGroup();
             boot.group(boss, worker)
                     .channel(NioServerSocketChannel.class)
-                    .option(ChannelOption.SO_BACKLOG, 100)
+                    .option(ChannelOption.SO_BACKLOG, 128)
                     // 保持长连接
                     .childOption(ChannelOption.SO_KEEPALIVE, true)
-                    .childHandler(new MyChannelInitializer<>(new HelloWorldServerHandler()));
+                    .childHandler(new MyServerChannelInitializer(HelloWorldServerHandler.class));
+                    //.childHandler(new ChannelInitializer<SocketChannel>() {
+                    //    @Override
+                    //    public void initChannel(SocketChannel ch) throws Exception {
+                    //        HelloWorldServerHandler serverHandler = new HelloWorldServerHandler();
+                    //        System.out.println("mychannel info - socketChannel:" + ch.hashCode() + " mychannel:" + this.hashCode() + " t:" + serverHandler.hashCode());
+                    //        ChannelPipeline p = ch.pipeline();
+                    //        //p.addLast(new LoggingHandler(LogLevel.DEBUG));
+                    //        p.addLast("encoder0",new LengthFieldPrepender(8, false));
+                    //        p.addLast("encoder1",new StringEncoder(Charset.forName("UTF-8")));
+                    //        p.addLast("decoder",new LengthFieldBasedFrameDecoder(1024 * 1024, 0, 8, 0, 8));
+                    //        p.addLast( new HelloWorldServerHandler());
+                    //    }
+                    //});
             // Start the server.
             ChannelFuture f = boot.bind(11111).sync();
 
+            // 是否需要这段代码
+            f.addListener(new ChannelFutureListener() {
+                @Override
+                public void operationComplete(ChannelFuture channelFuture) throws Exception {
+                    if(channelFuture.isSuccess()) {
+                        logger.debug("成功启动Server.");
+                    } else {
+                        logger.error("启动Server异常", channelFuture.cause());
+                    }
+                }
+            });
 
             // Wait until the server socket is closed.
             f.channel().closeFuture().sync();

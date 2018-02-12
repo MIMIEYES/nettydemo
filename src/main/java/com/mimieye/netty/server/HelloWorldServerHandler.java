@@ -4,9 +4,11 @@ import com.mimieye.netty.client.NettyClientTest;
 import com.mimieye.netty.common.GatewayService;
 import com.mimieye.netty.common.ThreadPool;
 import io.netty.buffer.ByteBuf;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.socket.SocketChannel;
+import io.netty.util.ReferenceCountUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,7 +39,9 @@ public class HelloWorldServerHandler extends ChannelInboundHandlerAdapter {
         buf.readBytes(bytes);
         String strMsg = new String(bytes, "UTF-8");
         logger.debug(strMsg);
-        buf.release();
+        //buf.release();
+        ReferenceCountUtil.release(msg);
+
 
         // 异步处理客户端消息
         String uuid = ctx.channel().id().asLongText();
@@ -63,10 +67,11 @@ public class HelloWorldServerHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         String uuid = ctx.channel().id().asLongText();
-        GatewayService.addGatewayChannel(uuid, (SocketChannel)ctx.channel());
+        SocketChannel socketChannel = (SocketChannel) ctx.channel();
+        GatewayService.addGatewayChannel(uuid, socketChannel);
         InetSocketAddress socketAddress = (InetSocketAddress) ctx.channel().remoteAddress();
         logger.debug("a new connect come in: " + uuid + ", ip: " + socketAddress.getAddress().toString() + ", port: " + socketAddress.getPort());
-        //socketAddress.
+        //socketChannel.eventLoop()
     }
 
 }

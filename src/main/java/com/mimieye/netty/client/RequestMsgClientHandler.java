@@ -3,12 +3,16 @@ package com.mimieye.netty.client;
 import com.mimieye.netty.common.CommonUtil;
 import com.mimieye.netty.common.ThreadPool;
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.util.ReferenceCountUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 
 import static com.mimieye.netty.common.CommonUtil.closeClient;
 
@@ -33,7 +37,8 @@ public class RequestMsgClientHandler extends ChannelInboundHandlerAdapter {
         buf.readBytes(bytes);
         String resp = new String(bytes, "UTF-8");
         logger.debug(resp);
-        buf.release();
+        //buf.release();
+        ReferenceCountUtil.release(msg);
 
         // 异步处理服务端消息
         ThreadPool.addTask(CommonUtil.socketChannel, resp);
