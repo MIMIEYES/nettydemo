@@ -21,10 +21,10 @@ public class TestTask implements Callable {
     @Override
     public Object call() throws Exception {
         String name = Thread.currentThread().getName();
-        logger.debug(name + "-线程[任务队列]开始处理消息.");
-        logger.debug(name + "-线程[任务队列]正在处理的消息 -> " + msg + "");
+        logger.info(name + "-线程[任务队列]开始处理消息.");
+        logger.info(name + "-线程[任务队列]正在处理的消息 -> " + msg + "");
         //TimeUnit.SECONDS.sleep(3);
-        logger.debug(name + "-线程[任务队列]任务处理结束.");
+        logger.info(name + "-线程[任务队列]任务处理结束.");
         String result = "r0r" + msg + "-> 正常处理.";
 
         String flag = msg.substring(0,3);

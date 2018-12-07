@@ -26,9 +26,12 @@ public class MyChannelInitializer<T extends ChannelInboundHandlerAdapter> extend
     protected void initChannel(SocketChannel socketChannel) throws Exception {
         System.out.println("mychannel info - socketChannel:" + socketChannel.hashCode() + " mychannel:" + this.hashCode() + " t:" + t.hashCode());
         ChannelPipeline p = socketChannel.pipeline();
-        p.addLast("decoder",new LengthFieldBasedFrameDecoder(1024 * 1024, 0, 8, 0, 8));
+        //p.addLast("decoder0",new MsgDecoder());
+        p.addLast("decoder1",new LengthFieldBasedFrameDecoder(1024 * 1024, 4, 4, 6, 0));
+        //p.addLast("decoder1",new LengthFieldBasedFrameDecoder(1024 * 1024, 0, 8, 0, 8));
         p.addLast("encoder0",new LengthFieldPrepender(8, false));
-        p.addLast("encoder1",new StringEncoder(Charset.forName("UTF-8")));
+        //p.addLast("encoder0",new MsgEncoder());
+        //p.addLast("encoder1",new StringEncoder(Charset.forName("UTF-8")));
         p.addLast(t);
 
 /*        p.names().stream().forEach((msg)->{

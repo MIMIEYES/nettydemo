@@ -30,7 +30,7 @@ public class NettyClientTest {
     private static Logger logger = LoggerFactory.getLogger(NettyClientTest.class);
 
     public static void main(String[] args) throws InterruptedException {
-        logger.debug("启动客户端.");
+        logger.info("启动客户端.");
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
@@ -45,18 +45,18 @@ public class NettyClientTest {
         thread.start();
         waitStartUp.await();
 
-        logger.debug("监听消息发送队列并发送消息.");
+        logger.info("监听消息发送队列并发送消息.");
         Runnable listener = new Runnable() {
             @Override
             public void run() {
                 while (RUNNING) {
                     String taskStr = null;
                     String name = Thread.currentThread().getName();
-                    logger.debug(name + "-线程[消息发送队列]准备读取消息.");
+                    logger.info(name + "-线程[消息发送队列]准备读取消息.");
                     synchronized (SEND_QUEUE) {
                         while(RUNNING && SEND_QUEUE.isEmpty()) {
                             try {
-                                logger.debug( name + "-线程[消息发送队列]等待消息.");
+                                logger.info( name + "-线程[消息发送队列]等待消息.");
                                 SEND_QUEUE.wait();
                             } catch (Exception e) {
                                 Thread.currentThread().interrupt();
@@ -66,20 +66,29 @@ public class NettyClientTest {
                         taskStr = SEND_QUEUE.poll();
                     }
                     if(StringUtils.isNotBlank(taskStr)) {
-                        logger.debug(name + "-线程[消息发送队列]发送数据.");
-                        socketChannel.writeAndFlush(taskStr);
-                        ByteBuf buf = Unpooled.copiedBuffer("asd", CharsetUtil.UTF_8);
+                        logger.info(name + "-线程[消息发送队列]发送数据.");
+                        ByteBuf buf = CommonUtil.wapperByteBuf(taskStr);
+                        ChannelFuture future = socketChannel.writeAndFlush(buf);
+                        //try {
+                        //    System.out.println(System.currentTimeMillis() + "-------client await start-------");
+                        //    future.await();
+                        //    System.out.println(System.currentTimeMillis() + "-------client await end-------");
+                        //} catch (InterruptedException e) {
+                        //    e.printStackTrace();
+                        //}
+
+                        //ByteBuf buf = Unpooled.copiedBuffer("asd", CharsetUtil.UTF_8);
                     }
 
                 }
-                logger.debug("客户端停止监听发送消息.");
+                logger.info("客户端停止监听发送消息.");
 
             }
         };
         Thread sendThread = new Thread(listener, "client_listen_and_send_msg");
         sendThread.start();
 
-        logger.debug("生产消息.");
+        logger.info("生产消息.");
         Scanner scanner = new Scanner(System.in);
         String input = null;
         while (scanner.hasNextLine()) {
@@ -87,7 +96,7 @@ public class NettyClientTest {
             if(!"exit".equals(input)) {
                 addMsg(input);
             } else {
-                logger.debug("准备关闭客户端.");
+                logger.info("准备关闭客户端.");
                 closeClient();
                 break;
             }
@@ -115,7 +124,7 @@ public class NettyClientTest {
 
             if(f.isSuccess()) {
                 socketChannel = (SocketChannel) f.channel();
-                logger.debug("clientId: " + socketChannel.id().asLongText() + " - 连接成功.");
+                logger.info("clientId: " + socketChannel.id().asLongText() + " - 连接成功.");
                 waitStartUp.countDown();
             } else {
                 System.out.println("&&&&&&&&&&&&&&&&&&&&&&");
@@ -126,7 +135,7 @@ public class NettyClientTest {
 
             // Wait until the connection is closed.
             f.channel().closeFuture().sync();
-            logger.debug("***************** client close. ***************** ");
+            logger.info("***************** client close. ***************** ");
         } catch (Exception e){
             e.printStackTrace();
             logger.error("================================================================",e);

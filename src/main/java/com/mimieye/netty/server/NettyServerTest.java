@@ -1,9 +1,11 @@
 package com.mimieye.netty.server;
 
+import com.mimieye.netty.common.CommonUtil;
 import com.mimieye.netty.common.MyChannelInitializer;
 import com.mimieye.netty.client.NettyClientTest;
 import com.mimieye.netty.common.MyServerChannelInitializer;
 import io.netty.bootstrap.ServerBootstrap;
+import io.netty.buffer.ByteBuf;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
@@ -27,7 +29,7 @@ public class NettyServerTest {
     private static Logger logger = LoggerFactory.getLogger(NettyClientTest.class);
 
     public static void main(String[] args) throws InterruptedException {
-        logger.debug("启动服务端.");
+        logger.info("启动服务端.");
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
@@ -38,18 +40,18 @@ public class NettyServerTest {
         Thread thread = new Thread(runnable, "server-pierre");
         thread.start();
 
-        logger.debug("监听消息发送队列并发送消息.");
+        logger.info("监听消息发送队列并发送消息.");
         Runnable listener = new Runnable() {
             @Override
             public void run() {
                 while (RUNNING) {
                     String taskStr = null;
                     String name = Thread.currentThread().getName();
-                    logger.debug(name + "-线程[消息发送队列]准备读取消息.");
+                    logger.info(name + "-线程[消息发送队列]准备读取消息.");
                     synchronized (SEND_QUEUE) {
                         while(RUNNING && SEND_QUEUE.isEmpty()) {
                             try {
-                                logger.debug( name + "-线程[消息发送队列]等待消息.");
+                                logger.info( name + "-线程[消息发送队列]等待消息.");
                                 SEND_QUEUE.wait();
                             } catch (Exception e) {
                                 Thread.currentThread().interrupt();
@@ -59,18 +61,19 @@ public class NettyServerTest {
                         taskStr = SEND_QUEUE.poll();
                     }
                     if(StringUtils.isNotBlank(taskStr)) {
-                        logger.debug(name + "-线程[消息发送队列]发送数据.");
-                        sendServerMsg(taskStr);
+                        logger.info(name + "-线程[消息发送队列]发送数据.");
+                        ByteBuf buf = CommonUtil.wapperByteBuf(taskStr);
+                        sendServerMsg(buf);
                     }
 
                 }
-                logger.debug("服务端停止监听发送消息.");
+                logger.info("服务端停止监听发送消息.");
             }
         };
         Thread sendThread = new Thread(listener, "server_listen_and_send_msg");
         sendThread.start();
 
-        logger.debug("生产消息.");
+        logger.info("生产消息.");
         Scanner scanner = new Scanner(System.in);
         String input = null;
         while (scanner.hasNextLine()) {
@@ -78,7 +81,7 @@ public class NettyServerTest {
             if(!"exit".equals(input)) {
                 addMsg(input);
             } else {
-                logger.debug("准备关闭服务端.");
+                logger.info("准备关闭服务端.");
                 closeServer();
                 break;
             }
@@ -125,7 +128,7 @@ public class NettyServerTest {
                 @Override
                 public void operationComplete(ChannelFuture channelFuture) throws Exception {
                     if(channelFuture.isSuccess()) {
-                        logger.debug("成功启动Server.");
+                        logger.info("成功启动Server.");
                     } else {
                         logger.error("启动Server异常", channelFuture.cause());
                     }

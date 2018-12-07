@@ -24,24 +24,30 @@ public class RequestMsgClientHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-        logger.debug("客户端检测到服务端连接关闭.");
+        logger.info("客户端检测到服务端连接关闭.");
         closeClient();
     }
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws UnsupportedEncodingException {
         // 收到server回复的消息
-        logger.debug("receive server msg: ");
+        logger.info("receive server msg: ");
         ByteBuf buf = (ByteBuf) msg;
+        logger.info("magic number is " + buf.readInt());
+        logger.info("msg length is " + buf.readInt());
+        logger.info("xor is " + buf.readByte());
+        logger.info("arithmetic is " + buf.readByte());
+        logger.info("moduleId is " + buf.readShort());
+        logger.info("msgType is " + buf.readShort());
         byte[] bytes = new byte[buf.readableBytes()];
         buf.readBytes(bytes);
         String resp = new String(bytes, "UTF-8");
-        logger.debug(resp);
+        logger.info(resp);
         //buf.release();
         ReferenceCountUtil.release(msg);
 
         // 异步处理服务端消息
-        ThreadPool.addTask(CommonUtil.socketChannel, resp);
+        //ThreadPool.addTask(CommonUtil.socketChannel, resp);
     }
 
 

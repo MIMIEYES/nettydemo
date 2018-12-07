@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import java.io.UnsupportedEncodingException;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Pierreluo on 2017/12/6.
@@ -26,28 +27,37 @@ public class HelloWorldServerHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         String uuid = ctx.channel().id().asLongText();
-        logger.debug("服务端检测到客户端连接关闭.ID: " + uuid);
+        logger.info("服务端检测到客户端连接关闭.ID: " + uuid);
         GatewayService.removeGatewayChannel(uuid);
-        logger.debug("当前容量：" + GatewayService.getChannels().size());
+        logger.info("当前容量：" + GatewayService.getChannels().size());
     }
 
     @Override
-    public void channelRead(ChannelHandlerContext ctx, Object msg) throws UnsupportedEncodingException {
-        logger.debug("receive client msg:");
+    public void channelRead(ChannelHandlerContext ctx, Object msg) throws UnsupportedEncodingException, InterruptedException {
+        logger.info("receive client msg:");
         ByteBuf buf = (ByteBuf) msg;
+        logger.info("magic number is " + buf.readInt());
+        logger.info("msg length is " + buf.readInt());
+        logger.info("xor is " + buf.readByte());
+        logger.info("arithmetic is " + buf.readByte());
+        logger.info("moduleId is " + buf.readShort());
+        logger.info("msgType is " + buf.readShort());
         byte[] bytes = new byte[buf.readableBytes()];
         buf.readBytes(bytes);
         String strMsg = new String(bytes, "UTF-8");
-        logger.debug(strMsg);
+        logger.info(strMsg);
         //buf.release();
         ReferenceCountUtil.release(msg);
 
 
-        // 异步处理客户端消息
-        String uuid = ctx.channel().id().asLongText();
-        SocketChannel socketChannel = GatewayService.getGatewayChannel(uuid);
-
-        ThreadPool.addTask(socketChannel, strMsg);
+        //System.out.println("server read sleep 5 sec.");
+        //TimeUnit.SECONDS.sleep(5);
+        //
+        //// 异步处理客户端消息
+        //String uuid = ctx.channel().id().asLongText();
+        //SocketChannel socketChannel = GatewayService.getGatewayChannel(uuid);
+        //
+        //ThreadPool.addTask(socketChannel, strMsg);
 
     }
 
@@ -70,7 +80,7 @@ public class HelloWorldServerHandler extends ChannelInboundHandlerAdapter {
         SocketChannel socketChannel = (SocketChannel) ctx.channel();
         GatewayService.addGatewayChannel(uuid, socketChannel);
         InetSocketAddress socketAddress = (InetSocketAddress) ctx.channel().remoteAddress();
-        logger.debug("a new connect come in: " + uuid + ", ip: " + socketAddress.getAddress().toString() + ", port: " + socketAddress.getPort());
+        logger.info("a new connect come in: " + uuid + ", ip: " + socketAddress.getAddress().toString() + ", port: " + socketAddress.getPort());
         //socketChannel.eventLoop()
     }
 
