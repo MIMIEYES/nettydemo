@@ -26,19 +26,15 @@ public class HelloWorldServerHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         String uuid = ctx.channel().id().asLongText();
-        logger.debug("服务端检测到客户端连接关闭.ID: " + uuid);
         GatewayService.removeGatewayChannel(uuid);
-        logger.debug("当前容量：" + GatewayService.getChannels().size());
     }
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws UnsupportedEncodingException {
-        logger.debug("receive client msg:");
         ByteBuf buf = (ByteBuf) msg;
         byte[] bytes = new byte[buf.readableBytes()];
         buf.readBytes(bytes);
         String strMsg = new String(bytes, "UTF-8");
-        logger.debug(strMsg);
         //buf.release();
         ReferenceCountUtil.release(msg);
 
@@ -60,7 +56,6 @@ public class HelloWorldServerHandler extends ChannelInboundHandlerAdapter {
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
         String uuid = ctx.channel().id().asLongText();
         String ip = ctx.channel().remoteAddress().toString();
-        logger.error("客户端-" + ip + " | " + uuid + "异常.", cause);
         //TODO 是否关闭连接
     }
 
@@ -70,7 +65,6 @@ public class HelloWorldServerHandler extends ChannelInboundHandlerAdapter {
         SocketChannel socketChannel = (SocketChannel) ctx.channel();
         GatewayService.addGatewayChannel(uuid, socketChannel);
         InetSocketAddress socketAddress = (InetSocketAddress) ctx.channel().remoteAddress();
-        logger.debug("a new connect come in: " + uuid + ", ip: " + socketAddress.getAddress().toString() + ", port: " + socketAddress.getPort());
         //socketChannel.eventLoop()
     }
 
