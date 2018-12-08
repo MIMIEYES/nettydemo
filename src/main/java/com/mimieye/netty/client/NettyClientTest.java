@@ -31,6 +31,10 @@ public class NettyClientTest {
 
     public static void main(String[] args) {
         new NettyClient().start();
+        new NettyClient().start();
+    }
+//    public static void main(String[] args) {
+//        new NettyClient().start();
 //        new NettyClient().start();
 //        new Thread(new Runnable() {
 //            @Override
@@ -45,7 +49,7 @@ public class NettyClientTest {
 //
 //            }
 //        }).start();
-    }
+//    }
 //    public static void main(String[] args) throws InterruptedException {
 //        logger.debug("启动客户端.");
 //        Runnable runnable = new Runnable() {
