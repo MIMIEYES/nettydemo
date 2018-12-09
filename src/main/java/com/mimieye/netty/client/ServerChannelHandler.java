@@ -35,7 +35,7 @@ public class ServerChannelHandler extends SimpleChannelInboundHandler {
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-
+        super.channelInactive(ctx);
         System.out.println("---------------server channelInactive");
         System.out.println("--------------------------------isReg:"+ ctx.channel().isRegistered());
         System.out.println("--------------------------------isOpen:"+ ctx.channel().isOpen());
@@ -43,9 +43,11 @@ public class ServerChannelHandler extends SimpleChannelInboundHandler {
         System.out.println("--------------------------------isWritable:"+ ctx.channel().isWritable());
         SocketChannel socketChannel = (SocketChannel)ctx.channel();
         System.out.println("--------------------------------isShutdown:"+ socketChannel.isShutdown());
+
     }
 
     public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
+        super.channelUnregistered(ctx);
         System.out.println("---------------server channelUnregistered");
         System.out.println("--------------------------------isReg:"+ ctx.channel().isRegistered());
         System.out.println("--------------------------------isOpen:"+ ctx.channel().isOpen());
@@ -53,7 +55,6 @@ public class ServerChannelHandler extends SimpleChannelInboundHandler {
         System.out.println("--------------------------------isWritable:"+ ctx.channel().isWritable());
         SocketChannel socketChannel = (SocketChannel)ctx.channel();
         System.out.println("--------------------------------isShutdown:"+ socketChannel.isShutdown());
-        ctx.close();
     }
 
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
@@ -65,6 +66,7 @@ public class ServerChannelHandler extends SimpleChannelInboundHandler {
         SocketChannel socketChannel = (SocketChannel)ctx.channel();
         System.out.println("--------------------------------isShutdown:"+ socketChannel.isShutdown());
         cause.printStackTrace();
+        super.exceptionCaught(ctx,cause);
     }
 
     @Override

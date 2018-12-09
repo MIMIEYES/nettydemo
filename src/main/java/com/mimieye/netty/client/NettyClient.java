@@ -60,10 +60,14 @@ public class NettyClient {
 
     public boolean start() {
         ChannelFuture future = null;
+        try {
+            future = boot.connect("127.0.0.1", 8003);
+            future.channel().closeFuture().awaitUninterruptibly();
+            return future.isSuccess();
+        } finally {
+            worker.shutdownGracefully();
+        }
 
-        future = boot.connect("127.0.0.1", 8003);
-        future.channel().closeFuture();
-        return future.isSuccess();
 
     }
 

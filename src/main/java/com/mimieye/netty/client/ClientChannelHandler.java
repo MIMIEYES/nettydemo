@@ -4,8 +4,6 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.socket.SocketChannel;
 
-import static com.mimieye.netty.common.CommonUtil.closeClient;
-
 public class ClientChannelHandler extends SimpleChannelInboundHandler {
 
     public void channelRegistered(io.netty.channel.ChannelHandlerContext ctx) throws java.lang.Exception {
