@@ -1,6 +1,7 @@
 package com.mimieye.netty.server;
 
 import com.mimieye.netty.client.NettyClientTest;
+import com.mimieye.netty.common.PlatformDepedentReporter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,7 +12,18 @@ public class NettyServerTest {
     private static Logger logger = LoggerFactory.getLogger(NettyClientTest.class);
 
     public static void main(String[] args) throws InterruptedException {
-        new NettyServer(8003).init().start();
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    new NettyServer(8003).init().start();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+        new PlatformDepedentReporter().init().start();
     }
 
 //    public static void main(String[] args) throws InterruptedException {
