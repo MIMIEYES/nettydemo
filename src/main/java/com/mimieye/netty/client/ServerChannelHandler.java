@@ -17,6 +17,8 @@ public class ServerChannelHandler extends SimpleChannelInboundHandler {
         System.out.println("--------------------------------isWritable:"+ ctx.channel().isWritable());
         SocketChannel socketChannel = (SocketChannel)ctx.channel();
         System.out.println("--------------------------------isShutdown:"+ socketChannel.isShutdown());
+        System.out.println(socketChannel.remoteAddress().getAddress());
+        System.out.println(socketChannel.remoteAddress().getPort());
     }
 
     public void channelActive(ChannelHandlerContext ctx) throws Exception {

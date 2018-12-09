@@ -30,8 +30,9 @@ public class NettyClientTest {
     private static Logger logger = LoggerFactory.getLogger(NettyClientTest.class);
 
     public static void main(String[] args) {
-        new NettyClient().start();
-        new NettyClient().start();
+        boolean b = new NettyClient().start();
+
+        System.out.println("---------------------" + b);
     }
 //    public static void main(String[] args) {
 //        new NettyClient().start();
