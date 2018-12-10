@@ -48,7 +48,7 @@ public class PlatformDepedentReporter extends Thread {
 
     private void doReport() {
         if (directMemory != null) {
-            System.out.println("--------------------------directMemory:" + directMemory.get());
+          //  System.out.println("--------------------------directMemory:" + directMemory.get());
         }
     }
 }

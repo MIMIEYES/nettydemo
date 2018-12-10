@@ -62,13 +62,23 @@ public class NettyClient {
         ChannelFuture future = null;
         try {
             future = boot.connect("127.0.0.1", 8003);
+            socketChannel = (SocketChannel) future.channel();
             future.channel().closeFuture().awaitUninterruptibly();
             return future.isSuccess();
         } finally {
             worker.shutdownGracefully();
         }
+    }
 
+    public void close(){
 
     }
 
+    public SocketChannel getSocketChannel() {
+        return socketChannel;
+    }
+
+    public void setSocketChannel(SocketChannel socketChannel) {
+        this.socketChannel = socketChannel;
+    }
 }

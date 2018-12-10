@@ -29,10 +29,10 @@ import static com.mimieye.netty.common.CommonUtil.*;
 public class NettyClientTest {
     private static Logger logger = LoggerFactory.getLogger(NettyClientTest.class);
 
-    public static void main(String[] args) {
-        boolean b = new NettyClient().start();
+    public static void main(String[] args) throws InterruptedException {
+        final NettyClient client = new NettyClient();
+        client.start();
 
-        System.out.println("---------------------" + b);
     }
 //    public static void main(String[] args) {
 //        new NettyClient().start();
